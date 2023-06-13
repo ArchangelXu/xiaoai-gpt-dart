@@ -135,7 +135,9 @@ class Network {
         returnedJson = jsonDecode(responseBody);
       }
     } catch (e) {
-      logger.w(e.toString());
+      if (e is! FormatException) {
+        logger.w(e.toString());
+      }
     }
     try {
       _logResponse(id, response.statusCode, responseBody, returnedJson);

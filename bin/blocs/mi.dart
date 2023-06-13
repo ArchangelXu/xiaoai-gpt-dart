@@ -41,7 +41,9 @@ class MiBloc extends BaseBloc {
 
   Future<void> init() async {
     if (!_initialized) {
+      logger.i("初始化小爱音箱服务...");
       await _getDeviceInfo();
+      logger.i("小爱音箱服务初始化完成");
       _initialized = true;
     }
   }
@@ -88,20 +90,30 @@ class MiBloc extends BaseBloc {
   }
 
   Future<void> startListening() async {
+    logger.i("等待提问。你可以使用这些提示词作为开头发起提问: ${ConfigBloc.instance.gptPrefix}");
     while (true) {
-      String? question = await _getLastQuestion();
+      String? question;
+      try {
+        question = await _getLastQuestion();
+      } catch (e, s) {
+        logger.e("获取对话数据时发生错误", e, s);
+      }
       if (question != null) {
-        await _playText("正在询问GPT，请稍等");
-        try {
-          String? response = await GptBloc.instance.ask(question);
-          if (response == null) {
-            await _playText("出现错误，退出程序");
-            return;
+        question = question.trim();
+        if (question.isNotEmpty) {
+          logger.i("收到提问: $question");
+          await playText("正在询问GPT，请稍等");
+          try {
+            String? response = await GptBloc.instance.ask(question);
+            if (response == null) {
+              await playText("出现错误，退出程序");
+              return;
+            }
+            await playText("以下是GPT的回答：$response");
+          } catch (e, s) {
+            logger.e("询问GPT时发生错误", e, s);
+            await playText("询问GPT时发生错误");
           }
-          await _playText("以下是GPT的回答：$response");
-        } catch (e) {
-          print(e);
-          await _playText("询问GPT时发生错误");
         }
       }
       await Future.delayed(Duration(seconds: 2));
@@ -134,7 +146,7 @@ class MiBloc extends BaseBloc {
     _device.deviceId = device['deviceID'];
     _saveDevice();
     logger.i(
-        "获取到设备：${ConfigBloc.instance.miDeviceName} hardware: ${_device.hardware}, deviceID=${_device.deviceId}");
+        "获取到设备：${ConfigBloc.instance.miDeviceName}，型号：${_device.hardware}，deviceID：${_device.deviceId}");
   }
 
   Future<void> _getDeviceDid() async {
@@ -152,7 +164,7 @@ class MiBloc extends BaseBloc {
     }
     _device.did = int.tryParse(device['did']);
     _saveDevice();
-    logger.i("获取到设备：${ConfigBloc.instance.miDeviceName} did: ${_device.did}");
+    logger.i("获取到设备：${ConfigBloc.instance.miDeviceName}，did：${_device.did}");
   }
 
   Future<List?> _getMiioDeviceList() async {
@@ -230,7 +242,7 @@ class MiBloc extends BaseBloc {
     return null;
   }
 
-  Future<void> _playText(String text) async {
+  Future<void> playText(String text) async {
     logger.i("开始播报：$text");
     var resp = await network.textToSpeech(
         deviceId: _device.deviceId!,
@@ -244,10 +256,17 @@ class MiBloc extends BaseBloc {
   }
 
   void _loadToken() {
+    bool empty = true;
     try {
-      _token = MiToken.fromJson(preferences.getJson(Preferences.keyMiToken));
+      var jsonData = preferences.getJson(Preferences.keyMiToken);
+      if (jsonData != null) {
+        _token = MiToken.fromJson(jsonData);
+        empty = false;
+      }
     } catch (e, s) {
       logger.w("load token error", e, s);
+    }
+    if (empty) {
       _token = MiToken.empty();
       _token.deviceId = randomString(16).toUpperCase();
     }
@@ -258,10 +277,17 @@ class MiBloc extends BaseBloc {
   }
 
   void _loadDevice() {
+    bool empty = true;
     try {
-      _device = MiDevice.fromJson(preferences.getJson(Preferences.keyMiDevice));
+      var jsonData = preferences.getJson(Preferences.keyMiDevice);
+      if (jsonData != null) {
+        _device = MiDevice.fromJson(jsonData);
+        empty = false;
+      }
     } catch (e, s) {
       logger.w("load device error", e, s);
+    }
+    if (empty) {
       _device = MiDevice();
     }
   }

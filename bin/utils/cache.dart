@@ -22,7 +22,7 @@ class FileCache {
     File? file;
     try {
       file = _getCacheFile(key);
-      logger.i("save: ${file.path}");
+      logger.d("save: ${file.path}");
 
       file.writeAsString(data);
     } catch (e, s) {
@@ -38,7 +38,7 @@ class FileCache {
     File? file;
     try {
       file = _getCacheFile(key);
-      logger.i("load: ${file.path}");
+      logger.d("load: ${file.path}");
       final exists = file.existsSync();
       if (!exists) {
         return data;
@@ -62,7 +62,7 @@ class FileCache {
     try {
       file = _getCacheFile(key);
 
-      logger.i("load: ${file.path}");
+      logger.d("delete: ${file.path}");
       final exists = file.existsSync();
       if (!exists) {
         return;
@@ -83,5 +83,6 @@ class FileCache {
     if (dir.existsSync()) {
       dir.deleteSync(recursive: true);
     }
+    logger.d("clear cache dir: '$path'");
   }
 }

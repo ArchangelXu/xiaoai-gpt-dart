@@ -157,3 +157,4 @@ dart_gpt
 file_cache
 token.txt
 get-pip.py
+*/tts.dart

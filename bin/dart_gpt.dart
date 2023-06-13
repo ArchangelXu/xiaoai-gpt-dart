@@ -13,7 +13,6 @@ Future<void> main(List<String> arguments) async {
       ConfigBloc.instance.miPassword == null) {
     return;
   }
-  // preferences.clear();
   await MiBloc.instance.init();
   if (await GptBloc.instance.initPandoraService()) {
     MiBloc.instance.startListening();

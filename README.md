@@ -1,57 +1,57 @@
 # 本项目的作用
 
-让小爱音箱连接ChatGPT，部署在群晖的linux系统上
+让小爱音箱连接ChatGPT，部署在群晖的linux系统（或其他linux和mac系统）上
 
 # 步骤
 
-- 在群晖网页后台安装python
+## 准备工作
 
-- 在群晖网页后台的控制面板中开启ssh登录，参考
+### 群晖环境
 
-> <https://blog.csdn.net/stone0823/article/details/120823717/>
+>- 在群晖网页后台安装python
+>
+>- 在群晖网页后台的控制面板中开启ssh登录，参考
+>
+>> <https://blog.csdn.net/stone0823/article/details/120823717/>
+>
+>- ssh登录到群晖的linux，用户名和密码与登录群晖网页后台的一样
+>
+>- 手动安装dart sdk（因为没有包管理器）
+>
+>> 参考 <https://dart.dev/get-dart/archive> 的Linux部分
 
-- ssh登录到群晖的linux，用户名和密码与登录群晖网页后台的一样
+### linux或者mac环境
 
-- 获取root权限
+>> 注意：不可部署在云服务器上，会被风控导致调用失败
+>
+>- 安装python
+>> 参考 <https://www.python.org/downloads/>
+>
+>- 安装dart sdk
+>
+>> 参考 <https://dart.dev/get-dart>
 
-> sudo su
-
-- 获取pip安装脚本：
-
-> wget https://bootstrap.pypa.io/get-pip.py
-
-- 安装pip：
-
-> python get-pip.py
-
-- 安装pandora：
-
-> pip install pandora-chatgpt
+## 部署
 
 - 获取openAI的access token，参考：
 
 > <https://github.com/pengzhile/pandora#%E4%BD%93%E9%AA%8C%E5%9C%B0%E5%9D%80>里面的拿Token部分
 
-- 新建一个文件token.txt，将token贴在里面，然后运行：
+- 下载本项目代码，进入项目目录
 
-> pandora --server 127.0.0.1:45555 --token_file token.txt --verbose
+- 重命名config.example.json => config.json，并填入相关信息（以*开头的都需要填）
 
-- 手动安装dart sdk（因为没有包管理器）
+- 进入scripts目录，执行
+> ./build.sh
+> （如果提示没有权限，可能要先chmod一下）
 
-> 参考 <https://dart.dev/get-dart/archive> 的Linux部分
+- 结束后执行
+> ./run.sh
 
-- 下载本项目代码
-
-- 重命名config.example.json=>config.json，并填入你的小米账号，以及小爱音箱的设备ID（DID）、型号（hardware），ID和型号的获取可参考
-
-> <https://github.com/Yonsm/MiService>
-
-- ssh到群晖linux，进入项目script目录执行：
+- 也可以执行以下命令打包可执行文件。但dart不支持跨平台编译，只能编译成当前机器平台的可执行文件。
+换句话说在x86架构的mac上打包后不能在m1芯片的mac上运行，也不能在arm架构的群晖linux上运行。
+所以推荐在要运行服务的机器上打包
 
 > ./compile.sh
->
-> 如果提示没有权限，可能要先chmod一下
-
-- 运行编译好的程序
-
-> dart_gpt
+- 这个脚本运行后会在output目录下生成dart_gpt文件。可以复制到项目目录使用以下命令执行
+> ./dart_gpt

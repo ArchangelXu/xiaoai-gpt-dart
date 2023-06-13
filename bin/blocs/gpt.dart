@@ -75,7 +75,7 @@ class GptBloc extends BaseBloc {
 
   String _generateConversationTitle() {
     var now = DateTime.now();
-    return "${now.year}年${now.month}月${now.day}";
+    return "${now.year}年${now.month}月${now.day}日";
   }
 
   Future<String?> _getModel() async {
@@ -83,6 +83,7 @@ class GptBloc extends BaseBloc {
   }
 
   Future<bool> initPandoraService() async {
+    logger.i("初始化Pandora服务...");
     if (!await _writeTokenFile()) {
       return false;
     }
@@ -101,6 +102,7 @@ class GptBloc extends BaseBloc {
     if (!_startPandoraServer()) {
       return false;
     }
+    logger.i("Pandora服务初始化完成");
     return true;
   }
 
@@ -163,7 +165,7 @@ class GptBloc extends BaseBloc {
 
   Future<ProcessResult> _executeCommand(String cmd,
       {bool runInShell = false}) async {
-    logger.i("executing '$cmd'...");
+    logger.d("executing '$cmd'...");
     var split = cmd.split(" ");
     List<String> arguments;
     if (split.length > 1) {
