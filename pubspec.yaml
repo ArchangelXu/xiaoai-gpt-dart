@@ -1,0 +1,30 @@
+name: dart_gpt
+description: A sample command-line application.
+version: 1.0.0
+# repository: https://github.com/my_org/my_repo
+
+environment:
+  sdk: ^3.0.1
+
+# Add regular dependencies here.
+dependencies:
+  pretty_json: "any"
+  json_annotation: ^4.8.1
+  rxdart: ^0.27.7
+  tuple: ^2.0.1
+  collection: ^1.17.2
+  http: any
+  uuid: any
+  crypto: any
+  html_unescape: ^2.0.0
+  logger: ^1.4.0
+  meta: any
+
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.21.0
+  build_runner: ^2.3.3
+  json_serializable: ^6.6.2
+
+dependency_overrides:
+  collection: ^1.17.2

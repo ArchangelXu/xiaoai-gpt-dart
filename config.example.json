@@ -1,0 +1,11 @@
+{
+  "mi_username": "小米账号用户名",
+  "mi_password": "小米账号密码",
+  "mi_device_name": "设备名称，如：小米AI音箱",
+  "gpt_host": "即将运行gpt服务的地址和端口，如：http://localhost:45555",
+  "gpt_prefix": [
+    "请回答"
+  ],
+  "gpt_token": "通过README中的方法获取到的openAI的access token，类似：eyJhbGc...",
+  "gpt_prompt_postfix": "，请将回答字数控制在100字以内，只回答文字不要带链接"
+}
