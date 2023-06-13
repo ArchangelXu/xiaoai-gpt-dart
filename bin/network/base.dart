@@ -194,10 +194,10 @@ class Network {
   }) {
     logger.d(
       "[REQUEST  $id] ${method.name.toUpperCase()} url=${uri.toString()},\n"
-      " query:${"\n" + prettyJson(uri.queryParameters)},\n"
+      " query:${"\n${prettyJson(uri.queryParameters)}"},\n"
       " headers:${extraHeaders == null ? "null" : prettyJson(extraHeaders)},\n"
-      " body:${body == null ? "null" : ("\n" + prettyJson(body))},\n"
-      " bodyFields:${bodyFields == null ? "null" : ("\n" + prettyJson(bodyFields))}",
+      " body:${body == null ? "null" : ("\n${prettyJson(body)}")},\n"
+      " bodyFields:${bodyFields == null ? "null" : ("\n${prettyJson(bodyFields)}")}",
     );
   }
 

@@ -37,7 +37,7 @@
 
 > <https://github.com/pengzhile/pandora#%E4%BD%93%E9%AA%8C%E5%9C%B0%E5%9D%80>里面的拿Token部分
 
-- 下载本项目代码，进入项目目录
+- 将本项目代码下载到目标机器上，进入项目目录
 
 - 重命名config.example.json => config.json，并填入相关信息（以*开头的都需要填）
 
@@ -55,3 +55,6 @@
 > ./compile.sh
 - 这个脚本运行后会在output目录下生成dart_gpt文件。可以复制到项目目录使用以下命令执行
 > ./dart_gpt
+
+# 截图
+![screenshot](https://raw.githubusercontent.com/ArchangelXu/xiaoai-gpt-dart/main/screenshot.png)
