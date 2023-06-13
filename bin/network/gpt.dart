@@ -58,6 +58,6 @@ extension GptApi on Network {
       extraHeaders: {'Content-Type': "application/json"},
       deserializer: (e) => e,
     );
-    return result['success']==true;
+    return result['success'] == true;
   }
 }
