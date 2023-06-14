@@ -5,7 +5,7 @@ import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 
-import '../blocs/mi.dart';
+import '../services/mi.dart';
 import 'base.dart';
 
 extension MiApi on Network {
@@ -181,10 +181,10 @@ extension MiApi on Network {
     required Map<String, dynamic> cookies,
   }) async {
     if (data != null) {
-      data['requestId'] = "app_ios_${MiBloc.randomString(30)}";
+      data['requestId'] = "app_ios_${MiService.randomString(30)}";
     } else {
       queryParams ??= {};
-      queryParams['requestId'] = "app_ios_${MiBloc.randomString(30)}";
+      queryParams['requestId'] = "app_ios_${MiService.randomString(30)}";
     }
     return _miRequest(
       uri: buildXMUri(
@@ -193,7 +193,7 @@ extension MiApi on Network {
         path: path,
         params: queryParams,
       ),
-      serviceId: MiBloc.minaServiceId,
+      serviceId: MiService.minaServiceId,
       data: data,
       cookies: cookies,
     );
@@ -251,7 +251,7 @@ extension MiApi on Network {
             'iOS-14.4-6.0.103-iPhone12,3--D7744744F7AF32F0544445285880DD63E47D9BE9-8816080-84A3F44E137B71AE-iPhone',
         'x-xiaomi-protocal-flag-cli': 'PROTOCAL-HTTP2',
       },
-      serviceId: MiBloc.miioServiceId,
+      serviceId: MiService.miioServiceId,
       data: _signMiioData(path, data, ssecurity),
       cookies: cookies,
     );

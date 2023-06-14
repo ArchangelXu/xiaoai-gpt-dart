@@ -8,13 +8,11 @@ import 'package:pretty_json/pretty_json.dart';
 
 import '../utils/logger.dart';
 
-//顶层变量
 Network network = Network._internal();
 
 enum HttpMethod { get, post, put, delete, patch }
 
 class Network {
-  /// 顶层变量，单例模式
   Network._internal() {
     _prepareHttpClient();
   }

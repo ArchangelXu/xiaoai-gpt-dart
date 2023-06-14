@@ -2,12 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import '../utils/logger.dart';
-import 'base.dart';
 
-class ConfigBloc extends BaseBloc {
-  static final ConfigBloc _instance = ConfigBloc._internal();
+class ConfigService {
+  static final ConfigService _instance = ConfigService._internal();
 
-  static ConfigBloc get instance => _instance;
+  static ConfigService get instance => _instance;
   String? miUsername;
   String? miPassword;
   String? miDeviceName;
@@ -17,7 +16,7 @@ class ConfigBloc extends BaseBloc {
   List<String> gptPrefix = [];
   String? gptPromptPostfix;
 
-  ConfigBloc._internal() {
+  ConfigService._internal() {
     _loadConfig();
   }
 

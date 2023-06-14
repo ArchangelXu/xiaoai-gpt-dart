@@ -1,6 +1,6 @@
-import 'blocs/config.dart';
-import 'blocs/gpt.dart';
-import 'blocs/mi.dart';
+import 'services/config.dart';
+import 'services/gpt.dart';
+import 'services/mi.dart';
 
 bool isDebug = false;
 
@@ -9,12 +9,12 @@ Future<void> main(List<String> arguments) async {
     isDebug = true;
     return true;
   }());
-  if (ConfigBloc.instance.miUsername == null ||
-      ConfigBloc.instance.miPassword == null) {
+  if (ConfigService.instance.miUsername == null ||
+      ConfigService.instance.miPassword == null) {
     return;
   }
-  await MiBloc.instance.init();
-  if (await GptBloc.instance.initPandoraService()) {
-    MiBloc.instance.startListening();
+  await MiService.instance.init();
+  if (await GptService.instance.initPandoraService()) {
+    MiService.instance.startListening();
   }
 }

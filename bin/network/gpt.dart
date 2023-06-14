@@ -1,4 +1,4 @@
-import '../blocs/config.dart';
+import '../services/config.dart';
 import 'base.dart';
 
 extension GptApi on Network {
@@ -12,8 +12,8 @@ extension GptApi on Network {
     return getResponseObject<Map>(
       HttpMethod.post,
       buildXMUri(
-        ssl: ConfigBloc.instance.gptIsSsl,
-        host: ConfigBloc.instance.gptHost!,
+        ssl: ConfigService.instance.gptIsSsl,
+        host: ConfigService.instance.gptHost!,
         path: "api/conversation/talk",
       ),
       body: {
@@ -33,8 +33,8 @@ extension GptApi on Network {
     Map result = await getResponseObject<Map>(
       HttpMethod.get,
       buildXMUri(
-        ssl: ConfigBloc.instance.gptIsSsl,
-        host: ConfigBloc.instance.gptHost!,
+        ssl: ConfigService.instance.gptIsSsl,
+        host: ConfigService.instance.gptHost!,
         path: "api/models",
       ),
       extraHeaders: {'Content-Type': "application/json"},
@@ -50,8 +50,8 @@ extension GptApi on Network {
     Map result = await getResponseObject<Map>(
       HttpMethod.patch,
       buildXMUri(
-        ssl: ConfigBloc.instance.gptIsSsl,
-        host: ConfigBloc.instance.gptHost!,
+        ssl: ConfigService.instance.gptIsSsl,
+        host: ConfigService.instance.gptHost!,
         path: "api/conversation/$conversationId",
       ),
       body: {'title': title},

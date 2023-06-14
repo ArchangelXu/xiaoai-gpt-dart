@@ -8,16 +8,15 @@ import '../network/base.dart';
 import '../network/mi.dart';
 import '../utils/logger.dart';
 import '../utils/preferences.dart';
-import 'base.dart';
 import 'config.dart';
 import 'gpt.dart';
 
-class MiBloc extends BaseBloc {
-  static final MiBloc _instance = MiBloc._internal();
+class MiService {
+  static final MiService _instance = MiService._internal();
   static const String minaServiceId = "micoapi";
   static const String miioServiceId = "xiaomiio";
 
-  static MiBloc get instance => _instance;
+  static MiService get instance => _instance;
   late MiToken _token;
   late MiDevice _device;
   int? _lastTimestamp;
@@ -33,7 +32,7 @@ class MiBloc extends BaseBloc {
         'deviceId': _token.deviceId,
       }..removeWhere((key, value) => value == null);
 
-  MiBloc._internal() {
+  MiService._internal() {
     _lastTimestamp = preferences.getInt(Preferences.keyMiLastTimestamp);
     _loadToken();
     _loadDevice();
@@ -63,9 +62,9 @@ class MiBloc extends BaseBloc {
       params['sid'] = result['sid'];
       params['callback'] = Uri.encodeFull(result['callback']);
       params['_json'] = "true";
-      params['user'] = ConfigBloc.instance.miUsername!;
+      params['user'] = ConfigService.instance.miUsername!;
       params['hash'] = md5
-          .convert(ConfigBloc.instance.miPassword!.codeUnits)
+          .convert(ConfigService.instance.miPassword!.codeUnits)
           .toString()
           .toUpperCase();
       result = (await network.serviceAuth(params, _getCookies(serviceId)));
@@ -90,7 +89,7 @@ class MiBloc extends BaseBloc {
   }
 
   Future<void> startListening() async {
-    logger.i("等待提问。你可以使用这些提示词作为开头发起提问: ${ConfigBloc.instance.gptPrefix}");
+    logger.i("等待提问。你可以使用这些提示词作为开头发起提问: ${ConfigService.instance.gptPrefix}");
     while (true) {
       String? question;
       try {
@@ -104,7 +103,7 @@ class MiBloc extends BaseBloc {
           logger.i("收到提问: $question");
           await playText("正在询问GPT，请稍等");
           try {
-            String? response = await GptBloc.instance.ask(question);
+            String? response = await GptService.instance.ask(question);
             if (response == null) {
               await playText("出现错误，退出程序");
               return;
@@ -146,7 +145,7 @@ class MiBloc extends BaseBloc {
     _device.deviceId = device['deviceID'];
     _saveDevice();
     logger.i(
-        "获取到设备：${ConfigBloc.instance.miDeviceName}，型号：${_device.hardware}，deviceID：${_device.deviceId}");
+        "获取到设备：${ConfigService.instance.miDeviceName}，型号：${_device.hardware}，deviceID：${_device.deviceId}");
   }
 
   Future<void> _getDeviceDid() async {
@@ -156,15 +155,15 @@ class MiBloc extends BaseBloc {
       return;
     }
     var device = devices
-        .firstWhere((e) => e['name'] == ConfigBloc.instance.miDeviceName);
+        .firstWhere((e) => e['name'] == ConfigService.instance.miDeviceName);
     if (device == null) {
       logger.e(
-          "获取设备ID失败。找不到设备：${ConfigBloc.instance.miDeviceName}，设备列表：${devices.map((e) => e['name']).toList()}");
+          "获取设备ID失败。找不到设备：${ConfigService.instance.miDeviceName}，设备列表：${devices.map((e) => e['name']).toList()}");
       return;
     }
     _device.did = int.tryParse(device['did']);
     _saveDevice();
-    logger.i("获取到设备：${ConfigBloc.instance.miDeviceName}，did：${_device.did}");
+    logger.i("获取到设备：${ConfigService.instance.miDeviceName}，did：${_device.did}");
   }
 
   Future<List?> _getMiioDeviceList() async {
@@ -227,7 +226,7 @@ class MiBloc extends BaseBloc {
       }
       String query = record['query'];
       bool found = false;
-      for (var prefix in ConfigBloc.instance.gptPrefix) {
+      for (var prefix in ConfigService.instance.gptPrefix) {
         if (query.startsWith(prefix)) {
           query = query.replaceFirst(prefix, "");
           found = true;

@@ -1,3 +1,0 @@
-class Bot {
-  void talk() {}
-}

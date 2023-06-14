@@ -6,15 +6,14 @@ import '../network/base.dart';
 import '../network/gpt.dart';
 import '../utils/logger.dart';
 import '../utils/preferences.dart';
-import 'base.dart';
 import 'config.dart';
 
-class GptBloc extends BaseBloc {
+class GptService {
   static const String _tokenFileName = "token.txt";
   static const String _pandoraPackageName = "pandora-chatgpt";
-  static final GptBloc _instance = GptBloc._internal();
+  static final GptService _instance = GptService._internal();
 
-  static GptBloc get instance => _instance;
+  static GptService get instance => _instance;
 
   String? _conversationId;
   String? _model;
@@ -22,7 +21,7 @@ class GptBloc extends BaseBloc {
 
   final Uuid _uuid = Uuid();
 
-  GptBloc._internal() {
+  GptService._internal() {
     _model = preferences.getString(Preferences.keyGptModel);
     _conversationId = preferences.getString(Preferences.keyConversationId);
     _parentMessageId = preferences.getString(Preferences.keyParentMessageId) ??
@@ -43,7 +42,7 @@ class GptBloc extends BaseBloc {
     String messageId = _generateMessageId();
     Map data = await network.askGpt(
       model: _model!,
-      prompt: "$prompt${ConfigBloc.instance.gptPromptPostfix ?? ""}",
+      prompt: "$prompt${ConfigService.instance.gptPromptPostfix ?? ""}",
       messageId: messageId,
       conversationId: _conversationId,
       parentMessageId: _parentMessageId,
@@ -109,7 +108,7 @@ class GptBloc extends BaseBloc {
   Future<bool> _writeTokenFile() async {
     try {
       File file = File(_tokenFileName);
-      file.writeAsStringSync(ConfigBloc.instance.gptToken!);
+      file.writeAsStringSync(ConfigService.instance.gptToken!);
     } catch (e, s) {
       logger.e("写入token文件失败", e, s);
       return false;
@@ -120,7 +119,7 @@ class GptBloc extends BaseBloc {
   bool _startPandoraServer() {
     try {
       _executeCommand(
-        "nohup pandora --server ${ConfigBloc.instance.gptHost} --token_file $_tokenFileName --verbose",
+        "nohup pandora --server ${ConfigService.instance.gptHost} --token_file $_tokenFileName --verbose",
         runInShell: true,
       );
     } catch (e, s) {
